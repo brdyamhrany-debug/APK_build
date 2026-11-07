@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>دکمه چوبی شیشه‌ای</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  display:grid;place-items:center;background:#fff;
+  font-family:Arial,sans-serif;
+}
+.glass{
+  position:relative;width:min(900px,94vw);height:min(600px,88vh);min-height:390px;
+  overflow:hidden;border-radius:34px;
+  background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(235,246,255,.25));
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 22px 65px rgba(48,83,112,.13),inset 0 1px 2px #fff;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+}
+.glass:before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(120deg,rgba(255,255,255,.72),transparent 35%,rgba(177,218,245,.10) 70%,rgba(255,255,255,.5));
+}
+.button-wrap{
+  position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+  width:190px;height:165px;display:grid;place-items:center;
+  cursor:grab;touch-action:none;user-select:none;z-index:2;
+}
+.button-wrap.dragging{cursor:grabbing}
+.halo{
+  position:absolute;inset:8px -16px;border-radius:42px;
+  background:linear-gradient(90deg,#55caff,#f5fdff 50%,#55caff);
+  filter:blur(19px);opacity:.13;transition:opacity .2s;
+}
+.button-wrap.pressed .halo{opacity:.95}
+.wood-button{
+  position:relative;width:150px;height:112px;border-radius:24px;
+  border:1px solid #f0d1a088;
+  background:
+    repeating-linear-gradient(4deg,transparent 0 9px,#4b210c22 10px 12px,transparent 13px 19px),
+    linear-gradient(135deg,#d8a46b,#9c5c2c 45%,#6d391d);
+  box-shadow:0 13px 0 #4b2919,0 20px 30px #0002,
+    inset 0 2px 5px #ffe4bd99,inset 0 -8px 12px #4a210c88;
+  transition:transform .12s,box-shadow .12s;
+  z-index:2;
+}
+.wood-button:before{
+  content:"";position:absolute;inset:9px;border-radius:17px;
+  border:1px solid #ffe0b455;box-shadow:inset 0 1px 4px #fff4;
+}
+.wood-button:after{
+  content:"";position:absolute;left:22px;right:22px;top:17px;height:15px;
+  border-radius:50%;background:linear-gradient(#fff6,transparent);filter:blur(5px);
+}
+.pressed .wood-button{
+  transform:translateY(10px) scale(.985);
+  box-shadow:0 3px 0 #4b2919,0 9px 18px #0002,
+    inset 0 3px 8px #4a210c77,inset 0 -2px 5px #ffe4bd66;
+}
+.side-light{
+  position:absolute;top:50%;width:17px;height:74px;transform:translateY(-50%);
+  border-radius:20px;background:linear-gradient(180deg,#eafcff,#58caff 50%,#eafcff);
+  opacity:0;box-shadow:0 0 9px #6bd7ff,0 0 24px #45bfff,0 0 42px #45bfff;
+  transition:opacity .18s;z-index:1;
+}
+.side-light.left{left:0}.side-light.right{right:0}
+.pressed .side-light{opacity:1}
+.reflection{
+  position:absolute;bottom:8px;width:125px;height:15px;border-radius:50%;
+  background:#c7edff22;filter:blur(8px);transition:all .15s;
+}
+.pressed .reflection{background:#73d9ff88;filter:blur(13px);width:155px}
+
+/* Glossy, viscous black liquid */
+.slime{
+  position:absolute;left:50%;top:calc(50% + 43px);width:112px;height:0;
+  transform:translateX(-50%);z-index:4;pointer-events:none;
+}
+.slime.active{height:130px}
+.blob{
+  position:absolute;top:0;left:50%;width:65px;height:38px;
+  transform:translateX(-50%) scale(.2);opacity:0;
+  border-radius:48% 52% 43% 57% / 58% 48% 52% 42%;
+  background:radial-gradient(ellipse at 30% 22%,#777 0%,#292929 20%,#050505 58%,#000 100%);
+  box-shadow:inset -7px -8px 12px #000, inset 5px 4px 8px #ffffff35,0 7px 10px #0002;
+}
+.slime.active .blob{animation:ooze 1.7s cubic-bezier(.22,.7,.25,1) forwards}
+.slime.active .blob:nth-child(2){animation-delay:.18s;left:27%;width:38px;height:54px}
+.slime.active .blob:nth-child(3){animation-delay:.32s;left:72%;width:42px;height:48px}
+.slime.active .blob:nth-child(4){animation-delay:.48s;left:48%;width:28px;height:66px}
+@keyframes ooze{
+  0%{opacity:0;transform:translateX(-50%) translateY(-8px) scale(.2)}
+  18%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+  55%{opacity:1;transform:translateX(-50%) translateY(45px) scale(1.08,1.25)}
+  100%{opacity:1;transform:translateX(-50%) translateY(105px) scale(.8,1.4)}
+}
+.drip{
+  position:absolute;top:26px;left:50%;width:13px;height:75px;
+  border-radius:50% 50% 45% 45%;
+  background:linear-gradient(90deg,#000,#242424 40%,#000);
+  box-shadow:inset 3px 0 4px #ffffff25;
+  transform:translateX(-50%) scaleY(0);transform-origin:top;
+}
+.slime.active .drip{animation:drip 1.8s ease-out .1s forwards}
+@keyframes drip{
+  0%{transform:translateX(-50%) scaleY(0)}
+  25%{transform:translateX(-50%) scaleY(.5)}
+  100%{transform:translateX(-50%) scaleY(1)}
+}
+@media(max-width:520px){.glass{min-height:420px}}
+</style>
+</head>
+<body>
+<main class="glass" id="scene">
+  <div class="button-wrap" id="buttonWrap" role="button" tabindex="0" aria-label="دکمه چوبی">
+    <div class="halo"></div>
+    <div class="side-light left"></div><div class="side-light right"></div>
+    <div class="wood-button"></div>
+    <div class="reflection"></div>
+    <div class="slime" id="slime">
+      <div class="blob"></div><div class="blob"></div><div class="blob"></div><div class="blob"></div>
+      <div class="drip"></div>
+    </div>
+  </div>
+</main>
+<script>
+(()=>{
+  const scene=document.getElementById('scene');
+  const button=document.getElementById('buttonWrap');
+  const slime=document.getElementById('slime');
+  let dragging=false,moved=false,longPress=false,startX=0,startY=0,baseX=0,baseY=0,x=0,y=0,timer=null;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function paint(){button.style.left=`calc(50% + ${x}px)`;button.style.top=`calc(52% + ${y}px)`}
+  function startSlime(){
+    if(!dragging)return;
+    longPress=true;slime.classList.remove('active');void slime.offsetWidth;slime.classList.add('active');
+  }
+  function down(e){
+    e.preventDefault();dragging=true;moved=false;longPress=false;
+    startX=e.clientX;startY=e.clientY;baseX=x;baseY=y;
+    button.classList.add('dragging','pressed');
+    button.setPointerCapture?.(e.pointerId);
+    timer=setTimeout(startSlime,650);
+  }
+  function move(e){
+    if(!dragging)return;
+    const dx=e.clientX-startX,dy=e.clientY-startY;
+    if(Math.abs(dx)+Math.abs(dy)>7){moved=true;clearTimeout(timer)}
+    const b=scene.getBoundingClientRect(),bw=button.offsetWidth,bh=button.offsetHeight;
+    x=clamp(baseX+dx,-b.width/2+bw/2+8,b.width/2-bw/2-8);
+    y=clamp(baseY+dy,-b.height/2+bh/2+8,b.height/2-bh/2-8);paint();
+  }
+  function up(){
+    if(!dragging)return;dragging=false;clearTimeout(timer);
+    button.classList.remove('dragging','pressed');
+    if(!longPress)slime.classList.remove('active');
+  }
+  button.addEventListener('pointerdown',down);
+  button.addEventListener('pointermove',move);
+  button.addEventListener('pointerup',up);
+  button.addEventListener('pointercancel',up);
+  button.addEventListener('lostpointercapture',up);
+  button.addEventListener('keydown',e=>{
+    if(e.key===' '||e.key==='Enter'){e.preventDefault();button.classList.add('pressed');clearTimeout(timer);timer=setTimeout(()=>{longPress=true;slime.classList.add('active')},650)}
+    const s=12;if(e.key==='ArrowLeft')x-=s;if(e.key==='ArrowRight')x+=s;if(e.key==='ArrowUp')y-=s;if(e.key==='ArrowDown')y+=s;
+    x=clamp(x,-scene.clientWidth/2+105,scene.clientWidth/2-105);
+    y=clamp(y,-scene.clientHeight/2+90,scene.clientHeight/2-90);paint();
+  });
+  button.addEventListener('keyup',e=>{
+    if(e.key===' '||e.key==='Enter'){clearTimeout(timer);button.classList.remove('pressed');if(!longPress)slime.classList.remove('active')}
+  });
+  window.addEventListener('resize',()=>{x=clamp(x,-scene.clientWidth/2+105,scene.clientWidth/2-105);y=clamp(y,-scene.clientHeight/2+90,scene.clientHeight/2-90);paint()});
+})();
+</script>
+</body>
+</html>
